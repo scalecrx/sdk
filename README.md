@@ -5,13 +5,13 @@ TypeScript SDK for Scale AMM and Scale VMM.
 ## Install
 
 ```bash
-npm install @scale-protocol/sdk @coral-xyz/anchor @solana/web3.js
+npm install @scale-net/sdk @coral-xyz/anchor @solana/web3.js
 ```
 
 ## Constants
 
 ```ts
-import { AMM_ADDRESS, VMM_ADDRESS, CLUSTER_RPC_URLS } from "@scale-protocol/sdk";
+import { AMM_ADDRESS, VMM_ADDRESS, CLUSTER_RPC_URLS } from "@scale-net/sdk";
 ```
 
 - `AMM_ADDRESS` => `SCALEwAvEK5gtkdHiFzXfPgtk2YwJxPDzaV3aDmR7tA`
@@ -22,7 +22,7 @@ import { AMM_ADDRESS, VMM_ADDRESS, CLUSTER_RPC_URLS } from "@scale-protocol/sdk"
 ### 1) RPC URL overload
 
 ```ts
-import { Scale } from "@scale-protocol/sdk";
+import { Scale } from "@scale-net/sdk";
 
 const sdk = new Scale("https://my-rpc.example.com", walletOptional);
 ```
@@ -30,7 +30,7 @@ const sdk = new Scale("https://my-rpc.example.com", walletOptional);
 ### 2) Cluster overload (`"devnet" | "mainnet"`)
 
 ```ts
-import { Scale } from "@scale-protocol/sdk";
+import { Scale } from "@scale-net/sdk";
 
 const sdkDevnet = new Scale("devnet", walletOptional); // uses https://api.devnet.solana.com
 const sdkMainnet = new Scale("mainnet", walletOptional); // uses https://api.mainnet-beta.solana.com
