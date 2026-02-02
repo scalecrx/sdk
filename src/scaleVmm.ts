@@ -35,7 +35,6 @@ import {
   getConfigAddress,
   getPairAddress,
   getPoolAddress,
-  getProgramDataAddress,
   getTokenProgramForMint,
   getVaultAddress,
   maybeCreateAtaInstruction,
@@ -137,129 +136,6 @@ export class ScaleVmm {
   async getGraduationThreshold() {
     const config = await this.getPlatformConfig();
     return config ? (config as any).graduationThreshold as BN : null;
-  }
-
-  async setPlatformBaseToken(baseToken: PublicKey) {
-    try {
-      const instruction = await this.setPlatformBaseTokenInstruction(baseToken);
-      const tx = new Transaction().add(instruction);
-      return await this.sendTransaction(tx, [], "confirmed");
-    } catch (err) {
-      throw toSdkError("setPlatformBaseToken failed", err, this.idlErrors);
-    }
-  }
-
-  async setPlatformBaseTokenInstruction(baseToken: PublicKey) {
-    const config = this.getConfigAddress();
-    const programData = getProgramDataAddress(this.programId);
-
-    try {
-      return await this.program.methods
-        .setPlatformBaseToken(baseToken)
-        .accounts({
-          authority: this.provider.wallet.publicKey,
-          config,
-          systemProgram: SystemProgram.programId,
-          programData,
-        })
-        .instruction();
-    } catch (err) {
-      throw toSdkError(
-        "setPlatformBaseTokenInstruction failed",
-        err,
-        this.idlErrors
-      );
-    }
-  }
-
-  async setPlatformFee(feeBps: number) {
-    try {
-      const instruction = await this.setPlatformFeeInstruction(feeBps);
-      const tx = new Transaction().add(instruction);
-      return await this.sendTransaction(tx, [], "confirmed");
-    } catch (err) {
-      throw toSdkError("setPlatformFee failed", err, this.idlErrors);
-    }
-  }
-
-  async setPlatformFeeInstruction(feeBps: number) {
-    const config = this.getConfigAddress();
-
-    try {
-      return await this.program.methods
-        .setPlatformFee(feeBps)
-        .accounts({
-          authority: this.provider.wallet.publicKey,
-          config,
-        })
-        .instruction();
-    } catch (err) {
-      throw toSdkError(
-        "setPlatformFeeInstruction failed",
-        err,
-        this.idlErrors
-      );
-    }
-  }
-
-  async setFeeBeneficiary(beneficiary: PublicKey) {
-    try {
-      const instruction = await this.setFeeBeneficiaryInstruction(beneficiary);
-      const tx = new Transaction().add(instruction);
-      return await this.sendTransaction(tx, [], "confirmed");
-    } catch (err) {
-      throw toSdkError("setFeeBeneficiary failed", err, this.idlErrors);
-    }
-  }
-
-  async setFeeBeneficiaryInstruction(beneficiary: PublicKey) {
-    const config = this.getConfigAddress();
-
-    try {
-      return await this.program.methods
-        .setFeeBeneficiary(beneficiary)
-        .accounts({
-          authority: this.provider.wallet.publicKey,
-          config,
-        })
-        .instruction();
-    } catch (err) {
-      throw toSdkError(
-        "setFeeBeneficiaryInstruction failed",
-        err,
-        this.idlErrors
-      );
-    }
-  }
-
-  async transferAuthority(newAuthority: PublicKey) {
-    try {
-      const instruction = await this.transferAuthorityInstruction(newAuthority);
-      const tx = new Transaction().add(instruction);
-      return await this.sendTransaction(tx, [], "confirmed");
-    } catch (err) {
-      throw toSdkError("transferAuthority failed", err, this.idlErrors);
-    }
-  }
-
-  async transferAuthorityInstruction(newAuthority: PublicKey) {
-    const config = this.getConfigAddress();
-
-    try {
-      return await this.program.methods
-        .transferAuthority(newAuthority)
-        .accounts({
-          authority: this.provider.wallet.publicKey,
-          config,
-        })
-        .instruction();
-    } catch (err) {
-      throw toSdkError(
-        "transferAuthorityInstruction failed",
-        err,
-        this.idlErrors
-      );
-    }
   }
 
   async setGraduationThreshold(threshold: BN | number) {

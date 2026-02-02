@@ -14,7 +14,6 @@ import {
 
 import { ScaleAmm } from "./scaleAmm";
 import { ScaleVmm } from "./scaleVmm";
-import { LaunchParams } from "./types";
 import ammIdl from "./idl/scale_amm.json";
 import vmmIdl from "./idl/scale_vmm.json";
 import { AMM_ADDRESS, CLUSTER_RPC_URLS, ScaleCluster, VMM_ADDRESS } from "./constants";
@@ -138,22 +137,6 @@ export class Scale {
 
   load(programId: PublicKey = this.ammProgramId, idlOverride?: Idl) {
     return this.loadAmm(programId, idlOverride);
-  }
-
-  async launch(params: LaunchParams) {
-    const programId = params.programId ?? this.ammProgramId;
-    const scaleAmm = this.loadAmm(programId);
-    await scaleAmm.setPlatformBaseToken(params.baseToken);
-    return scaleAmm;
-  }
-
-  async launchInstructions(params: LaunchParams) {
-    const programId = params.programId ?? this.ammProgramId;
-    const scaleAmm = this.loadAmm(programId);
-    const instruction = await scaleAmm.setPlatformBaseTokenInstruction(
-      params.baseToken
-    );
-    return { scaleAmm, instructions: [instruction] };
   }
 }
 

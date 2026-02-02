@@ -66,13 +66,6 @@ const quote = await sdk.amm.estimateBuy(pool.address, { amount: 10_000, limit: 1
 ```
 
 ```ts
-await sdk.amm.setPlatformBaseToken(baseMint);
-await sdk.amm.setPlatformFee(100);
-await sdk.amm.setFeeBeneficiary(beneficiary);
-await sdk.amm.transferAuthority(newAuthority);
-```
-
-```ts
 const createBundle = await sdk.amm.createPoolInstructions(params, mintA, mintB, options);
 const swapBundle = await sdk.amm.buyInstructions(poolAddress, { amount: 10_000, limit: 1 }, options);
 ```
@@ -86,11 +79,7 @@ const quote = await sdk.vmm.estimateSell(pair.address, { amount: 10_000, limit: 
 ```
 
 ```ts
-await sdk.vmm.setPlatformBaseToken(baseMint);
-await sdk.vmm.setPlatformFee(100);
-await sdk.vmm.setFeeBeneficiary(beneficiary);
 await sdk.vmm.setGraduationThreshold(1_000_000);
-await sdk.vmm.transferAuthority(newAuthority);
 ```
 
 ```ts
@@ -104,14 +93,14 @@ const swapBundle = await sdk.vmm.sellInstructions(pairAddress, { amount: 10_000,
 - `new Scale(connection, wallet, options)`
 - `new Scale(rpcUrl, wallet?, options?)`
 - `new Scale("devnet" | "mainnet", wallet?, options?)`
-- `amm`, `vmm`, `loadAmm`, `loadVmm`, `launch`, `launchInstructions`
+- `amm`, `vmm`, `loadAmm`, `loadVmm`
 
 ### `ScaleAmm`
 - Read-only: `getConfigAddress`, `getPoolAddress`, `getVaultAddress`, `getPlatformConfig`, `getPlatformBaseToken`, `getPool*`, `getFee*`, `estimateBuy`, `estimateSell`
-- Execute: `setPlatformBaseToken`, `setPlatformFee`, `setFeeBeneficiary`, `transferAuthority`, `createPool`, `buy`, `sell`
-- Instruction builders: `setPlatformBaseTokenInstruction`, `setPlatformFeeInstruction`, `setFeeBeneficiaryInstruction`, `transferAuthorityInstruction`, `createPoolInstructions`, `createWithDevBuyInstructions`, `buyInstructions`, `sellInstructions`
+- Execute: `createPool`, `buy`, `sell`
+- Instruction builders: `createPoolInstructions`, `createWithDevBuyInstructions`, `buyInstructions`, `sellInstructions`
 
 ### `ScaleVmm`
 - Read-only: `getConfigAddress`, `getPairAddress`, `getVaultAddress`, `getAmmPoolAddress`, `getAmmVaultAddress`, `getPlatformConfig`, `getPlatformConfigView`, `getPlatformBaseToken`, `getGraduationThreshold`, `getPair*`, `getFee*`, `estimateBuy`, `estimateSell`
-- Execute: `setPlatformBaseToken`, `setPlatformFee`, `setFeeBeneficiary`, `setGraduationThreshold`, `transferAuthority`, `createPair`, `buy`, `sell`
-- Instruction builders: `setPlatformBaseTokenInstruction`, `setPlatformFeeInstruction`, `setFeeBeneficiaryInstruction`, `setGraduationThresholdInstruction`, `transferAuthorityInstruction`, `createPairInstructions`, `createWithDevBuyInstructions`, `buyInstructions`, `sellInstructions`
+- Execute: `setGraduationThreshold`, `createPair`, `buy`, `sell`
+- Instruction builders: `setGraduationThresholdInstruction`, `createPairInstructions`, `createWithDevBuyInstructions`, `buyInstructions`, `sellInstructions`
