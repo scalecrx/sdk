@@ -79,10 +79,6 @@ const quote = await sdk.vmm.estimateSell(pair.address, { amount: 10_000, limit: 
 ```
 
 ```ts
-await sdk.vmm.setGraduationThreshold(1_000_000);
-```
-
-```ts
 const createBundle = await sdk.vmm.createPairInstructions(params, mintA, mintB, options);
 const swapBundle = await sdk.vmm.sellInstructions(pairAddress, { amount: 10_000, limit: 1 }, options);
 ```
