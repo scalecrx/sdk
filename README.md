@@ -22,7 +22,7 @@ import { AMM_ADDRESS, VMM_ADDRESS, CLUSTER_RPC_URLS } from "@scale-net/sdk";
 ### 1) RPC URL overload
 
 ```ts
-import { Scale } from "@scale-net/sdk";
+import { Scale } from "@scalecrx/sdk";
 
 const sdk = new Scale("https://my-rpc.example.com", walletOptional);
 ```
@@ -30,7 +30,7 @@ const sdk = new Scale("https://my-rpc.example.com", walletOptional);
 ### 2) Cluster overload (`"devnet" | "mainnet"`)
 
 ```ts
-import { Scale } from "@scale-net/sdk";
+import { Scale } from "@scalecrx/sdk";
 
 const sdkDevnet = new Scale("devnet", walletOptional); // uses https://api.devnet.solana.com
 const sdkMainnet = new Scale("mainnet", walletOptional); // uses https://api.mainnet-beta.solana.com
