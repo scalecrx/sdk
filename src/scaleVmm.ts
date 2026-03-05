@@ -460,8 +460,6 @@ export class ScaleVmm {
       const ammConfig = options.ammConfig ?? getConfigAddress(ammProgramId);
       const ammTokenProgramA = options.ammTokenProgramA ?? tokenProgramA;
       const ammTokenProgramB = options.ammTokenProgramB ?? tokenProgramB;
-      const ammSystemProgram = options.ammSystemProgram ?? SystemProgram.programId;
-
       const ix = await (this.program.methods as any).buy(swapParams)
         .accounts({
           pair,
@@ -484,7 +482,6 @@ export class ScaleVmm {
           ammConfig,
           ammTokenProgramA,
           ammTokenProgramB,
-          ammSystemProgram,
         })
         .remainingAccounts(
           remainingAccounts.map((pubkey) => ({
@@ -774,8 +771,6 @@ export class ScaleVmm {
     const ammConfig = options.ammConfig ?? getConfigAddress(ammProgramId);
     const ammTokenProgramA = options.ammTokenProgramA ?? tokenProgramA;
     const ammTokenProgramB = options.ammTokenProgramB ?? tokenProgramB;
-    const ammSystemProgram = options.ammSystemProgram ?? SystemProgram.programId;
-
     const ix = await (this.program.methods as any)[action](swapParams)
       .accounts({
         pair: pair.address,
@@ -798,7 +793,6 @@ export class ScaleVmm {
         ammConfig,
         ammTokenProgramA,
         ammTokenProgramB,
-        ammSystemProgram,
       })
       .remainingAccounts(
         remainingAccounts.map((pubkey) => ({

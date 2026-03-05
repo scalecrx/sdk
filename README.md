@@ -113,7 +113,7 @@ Use one of:
 In addition to `SwapOptions`, VMM accepts AMM-routing overrides used for graduation-aware paths:
 
 - `ammProgramId?`, `ammPool?`, `ammVaultA?`, `ammVaultB?`
-- `ammConfig?`, `ammTokenProgramA?`, `ammTokenProgramB?`, `ammSystemProgram?`
+- `ammConfig?`, `ammTokenProgramA?`, `ammTokenProgramB?`
 
 ### SDK constructor options (`ScaleOptions`)
 
