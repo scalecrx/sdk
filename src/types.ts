@@ -80,8 +80,6 @@ export type VmmSwapOptions = SwapOptions & {
   ammVaultA?: PublicKey;
   ammVaultB?: PublicKey;
   ammConfig?: PublicKey;
-  ammTokenProgramA?: PublicKey;
-  ammTokenProgramB?: PublicKey;
 };
 
 export type InstructionBundle = {

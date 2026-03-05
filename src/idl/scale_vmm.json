@@ -147,12 +147,6 @@
         },
         {
           "name": "amm_config"
-        },
-        {
-          "name": "amm_token_program_a"
-        },
-        {
-          "name": "amm_token_program_b"
         }
       ],
       "args": [
@@ -637,12 +631,6 @@
         },
         {
           "name": "amm_config"
-        },
-        {
-          "name": "amm_token_program_a"
-        },
-        {
-          "name": "amm_token_program_b"
         }
       ],
       "args": [

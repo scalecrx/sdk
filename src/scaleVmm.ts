@@ -458,8 +458,6 @@ export class ScaleVmm {
       const ammVaultB =
         options.ammVaultB ?? getVaultAddress(ammProgramId, ammPool, mintB);
       const ammConfig = options.ammConfig ?? getConfigAddress(ammProgramId);
-      const ammTokenProgramA = options.ammTokenProgramA ?? tokenProgramA;
-      const ammTokenProgramB = options.ammTokenProgramB ?? tokenProgramB;
       const ix = await (this.program.methods as any).buy(swapParams)
         .accounts({
           pair,
@@ -480,8 +478,6 @@ export class ScaleVmm {
           ammVaultA,
           ammVaultB,
           ammConfig,
-          ammTokenProgramA,
-          ammTokenProgramB,
         })
         .remainingAccounts(
           remainingAccounts.map((pubkey) => ({
@@ -769,8 +765,6 @@ export class ScaleVmm {
     const ammVaultB =
       options.ammVaultB ?? getVaultAddress(ammProgramId, ammPool, pair.mintB);
     const ammConfig = options.ammConfig ?? getConfigAddress(ammProgramId);
-    const ammTokenProgramA = options.ammTokenProgramA ?? tokenProgramA;
-    const ammTokenProgramB = options.ammTokenProgramB ?? tokenProgramB;
     const ix = await (this.program.methods as any)[action](swapParams)
       .accounts({
         pair: pair.address,
@@ -791,8 +785,6 @@ export class ScaleVmm {
         ammVaultA,
         ammVaultB,
         ammConfig,
-        ammTokenProgramA,
-        ammTokenProgramB,
       })
       .remainingAccounts(
         remainingAccounts.map((pubkey) => ({
