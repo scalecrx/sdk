@@ -243,3 +243,27 @@ const swapBundle = await sdk.vmm.sellInstructions(
   - `sell(pairInput, params, options?)`
   - `buyInstructions(pairInput, params, options?)`
   - `sellInstructions(pairInput, params, options?)`
+
+## Agent Use
+
+Use this prompt in your AI coding agent to integrate an existing project with Scale SDK:
+
+```text
+Integrate Scale SDK into this project end-to-end using the official docs:
+https://github.com/scalecrx/sdk/blob/main/README.md
+
+Requirements:
+1. Install and configure @scalecrx/sdk and required Solana/Anchor dependencies.
+2. Detect this project’s package manager, TypeScript setup, and runtime (Node/server/client), then implement integration in the correct layer.
+3. Add a reusable Scale client module and environment-driven RPC/network configuration.
+4. Implement at least one read flow (platform config + pair/pool fetch/quote) and one transaction instruction-building flow using this SDK.
+5. If wallet execution is not available in this project context, use instruction builders only and wire outputs for external signing.
+6. Keep all amounts in raw base units (not UI decimals) and add safe input validation.
+7. Add/update minimal docs in this repo explaining how to run and use the integration.
+8. Run build/typecheck/tests (if present) and fix any issues caused by the integration.
+
+Output format:
+- Summary of files changed and why
+- Exact commands run
+- Any assumptions or follow-up tasks
+```
