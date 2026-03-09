@@ -51,8 +51,7 @@
           "signer": true
         },
         {
-          "name": "mint_a",
-          "writable": true
+          "name": "mint_a"
         },
         {
           "name": "mint_b"
@@ -535,8 +534,7 @@
           "signer": true
         },
         {
-          "name": "mint_a",
-          "writable": true
+          "name": "mint_a"
         },
         {
           "name": "mint_b"
