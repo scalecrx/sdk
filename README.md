@@ -110,10 +110,13 @@ Use one of:
 
 ### VMM swap extension (`VmmSwapOptions`)
 
-In addition to `SwapOptions`, VMM accepts AMM-routing overrides used for graduation-aware paths:
+In addition to `SwapOptions`, VMM accepts optional explicit AMM graduation accounts:
 
-- `ammProgramId?`, `ammPool?`, `ammVaultA?`, `ammVaultB?`
-- `ammConfig?`
+- `ammPool?`, `ammVaultA?`, `ammVaultB?`, `ammConfig?`
+
+The VMM client always targets the Scale AMM program
+`SCALEwAvEK5gtkdHiFzXfPgtk2YwJxPDzaV3aDmR7tA` for graduation. `ammProgramId`
+is not configurable in VMM flows.
 
 ### Graduation status check
 
@@ -124,7 +127,8 @@ const isGraduated = pair.data.graduated;
 
 ### SDK constructor options (`ScaleOptions`)
 
-- `ammProgramId?`, `vmmProgramId?`: override default vanity program IDs.
+- `ammProgramId?`: override the AMM client program ID.
+- `vmmProgramId?`: override the VMM client program ID.
 - `ammIdl?`, `vmmIdl?`: IDL overrides.
 - `programId?`, `idl?`: legacy AMM alias fallback.
 - `providerOptions?`: Anchor provider confirmation/preflight options.

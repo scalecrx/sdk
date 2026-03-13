@@ -75,7 +75,6 @@ export type SwapOptions = {
 };
 
 export type VmmSwapOptions = SwapOptions & {
-  ammProgramId?: PublicKey;
   ammPool?: PublicKey;
   ammVaultA?: PublicKey;
   ammVaultB?: PublicKey;

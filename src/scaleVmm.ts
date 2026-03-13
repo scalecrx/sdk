@@ -43,6 +43,7 @@ import {
 } from "./utils";
 import { ScaleSdkError, toSdkError } from "./errors";
 import idl from "./idl/scale_vmm.json";
+import { AMM_ADDRESS } from "./constants";
 
 export type PairAccount = {
   enabled: boolean;
@@ -65,14 +66,12 @@ export class ScaleVmm {
   readonly program: Program;
   readonly idl: Idl;
   readonly idlErrors: Map<number, string>;
-  readonly ammProgramId?: PublicKey;
   readonly hasWallet: boolean;
 
   constructor(
     provider: AnchorProvider,
     programId: PublicKey,
     idlOverride?: Idl,
-    ammProgramId?: PublicKey,
     hasWallet = true
   ) {
     this.provider = provider;
@@ -81,7 +80,6 @@ export class ScaleVmm {
     this.idl = { ...resolvedIdl, address: programId.toBase58() } as Idl;
     this.program = new Program(this.idl, provider);
     this.idlErrors = parseIdlErrors(this.idl);
-    this.ammProgramId = ammProgramId;
     this.hasWallet = hasWallet;
   }
 
@@ -98,13 +96,11 @@ export class ScaleVmm {
   }
 
   getAmmPoolAddress(pair: PublicKey, mintA: PublicKey, mintB: PublicKey) {
-    const programId = this.resolveAmmProgramId();
-    return getPoolAddress(programId, pair, mintA, mintB);
+    return getPoolAddress(AMM_ADDRESS, pair, mintA, mintB);
   }
 
   getAmmVaultAddress(pool: PublicKey, mint: PublicKey) {
-    const programId = this.resolveAmmProgramId();
-    return getVaultAddress(programId, pool, mint);
+    return getVaultAddress(AMM_ADDRESS, pool, mint);
   }
 
   async getPlatformConfig() {
@@ -446,18 +442,13 @@ export class ScaleVmm {
           })
         ));
 
-      const ammProgramId = options.ammProgramId ?? this.ammProgramId;
-      if (!ammProgramId) {
-        throw new Error("ammProgramId is required for VMM swaps");
-      }
-
       const ammPool =
-        options.ammPool ?? getPoolAddress(ammProgramId, pair, mintA, mintB);
+        options.ammPool ?? getPoolAddress(AMM_ADDRESS, pair, mintA, mintB);
       const ammVaultA =
-        options.ammVaultA ?? getVaultAddress(ammProgramId, ammPool, mintA);
+        options.ammVaultA ?? getVaultAddress(AMM_ADDRESS, ammPool, mintA);
       const ammVaultB =
-        options.ammVaultB ?? getVaultAddress(ammProgramId, ammPool, mintB);
-      const ammConfig = options.ammConfig ?? getConfigAddress(ammProgramId);
+        options.ammVaultB ?? getVaultAddress(AMM_ADDRESS, ammPool, mintB);
+      const ammConfig = options.ammConfig ?? getConfigAddress(AMM_ADDRESS);
       const ix = await (this.program.methods as any).buy(swapParams)
         .accounts({
           pair,
@@ -473,7 +464,7 @@ export class ScaleVmm {
           tokenProgramB,
           systemProgram: SystemProgram.programId,
           config,
-          ammProgram: ammProgramId,
+          ammProgram: AMM_ADDRESS,
           ammPool,
           ammVaultA,
           ammVaultB,
@@ -753,18 +744,13 @@ export class ScaleVmm {
         })
       ));
 
-    const ammProgramId = options.ammProgramId ?? this.ammProgramId;
-    if (!ammProgramId) {
-      throw new Error("ammProgramId is required for VMM swaps");
-    }
-
     const ammPool =
-      options.ammPool ?? getPoolAddress(ammProgramId, pair.address, pair.mintA, pair.mintB);
+      options.ammPool ?? getPoolAddress(AMM_ADDRESS, pair.address, pair.mintA, pair.mintB);
     const ammVaultA =
-      options.ammVaultA ?? getVaultAddress(ammProgramId, ammPool, pair.mintA);
+      options.ammVaultA ?? getVaultAddress(AMM_ADDRESS, ammPool, pair.mintA);
     const ammVaultB =
-      options.ammVaultB ?? getVaultAddress(ammProgramId, ammPool, pair.mintB);
-    const ammConfig = options.ammConfig ?? getConfigAddress(ammProgramId);
+      options.ammVaultB ?? getVaultAddress(AMM_ADDRESS, ammPool, pair.mintB);
+    const ammConfig = options.ammConfig ?? getConfigAddress(AMM_ADDRESS);
     const ix = await (this.program.methods as any)[action](swapParams)
       .accounts({
         pair: pair.address,
@@ -780,7 +766,7 @@ export class ScaleVmm {
         tokenProgramB,
         systemProgram: SystemProgram.programId,
         config,
-        ammProgram: ammProgramId,
+        ammProgram: AMM_ADDRESS,
         ammPool,
         ammVaultA,
         ammVaultB,
@@ -801,13 +787,6 @@ export class ScaleVmm {
       userTokenAccountA: userTaA!,
       userTokenAccountB: userTaB!,
     };
-  }
-
-  private resolveAmmProgramId() {
-    if (!this.ammProgramId) {
-      throw new Error("ammProgramId is required for AMM derivations");
-    }
-    return this.ammProgramId;
   }
 
   private async sendTransaction(

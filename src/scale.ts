@@ -114,7 +114,6 @@ export class Scale {
       this.provider,
       this.vmmProgramId,
       this.vmmIdl,
-      this.ammProgramId,
       this.hasWallet
     );
   }
@@ -130,7 +129,6 @@ export class Scale {
       this.provider,
       programId,
       resolvedIdl,
-      this.ammProgramId,
       this.hasWallet
     );
   }
