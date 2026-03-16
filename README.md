@@ -92,6 +92,7 @@ Use one of:
 - `owner?` (AMM only): pool owner PDA seed input (defaults to SDK wallet).
 - `tokenWalletB?`: token B source account for create.
 - `tokenWalletAuthority?`: authority for `tokenWalletB` transfers.
+- `autoCreateBeneficiaryAtas?`: auto-create platform-fee and beneficiary ATAs for `mintA` during create (default `true`).
 - `signers?`: extra signers appended to returned bundle/send.
 
 ### Swap params (`SwapParamsInput`)
@@ -156,6 +157,7 @@ const createBundle = await sdk.amm.createPoolInstructions(
     owner,
     tokenWalletB,
     tokenWalletAuthority,
+    autoCreateBeneficiaryAtas: true,
   }
 );
 
@@ -196,6 +198,7 @@ const createBundle = await sdk.vmm.createPairInstructions(
     payer,
     tokenWalletB,
     tokenWalletAuthority,
+    autoCreateBeneficiaryAtas: true,
   }
 );
 

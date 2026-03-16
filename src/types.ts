@@ -54,6 +54,7 @@ export type CreatePoolOptions = {
   owner?: PublicKey;
   tokenWalletB?: PublicKey;
   tokenWalletAuthority?: PublicKey;
+  autoCreateBeneficiaryAtas?: boolean;
   signers?: Signer[];
 };
 
@@ -61,6 +62,7 @@ export type CreatePairOptions = {
   payer?: PublicKey;
   tokenWalletB?: PublicKey;
   tokenWalletAuthority?: PublicKey;
+  autoCreateBeneficiaryAtas?: boolean;
   signers?: Signer[];
 };
 

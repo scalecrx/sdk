@@ -33,6 +33,7 @@ import {
 } from "./types";
 import {
   getConfigAddress,
+  getAta,
   getPoolAddress,
   getTokenProgramForMint,
   getVaultAddress,
@@ -186,6 +187,7 @@ export class ScaleAmm {
     const owner = options.owner ?? this.provider.wallet.publicKey;
     const tokenWalletAuthority =
       options.tokenWalletAuthority ?? this.provider.wallet.publicKey;
+    const autoCreateBeneficiaryAtas = options.autoCreateBeneficiaryAtas ?? true;
 
     try {
       const tokenProgramA = await getTokenProgramForMint(
@@ -204,6 +206,20 @@ export class ScaleAmm {
 
       let tokenWalletB = options.tokenWalletB;
       const instructions: TransactionInstruction[] = [];
+      const seenAtaInstructions = new Set<string>();
+      const pushAtaInstruction = (
+        ataResult: Awaited<ReturnType<typeof maybeCreateAtaInstruction>>
+      ) => {
+        if (!ataResult.instruction) {
+          return;
+        }
+        const ataKey = ataResult.ata.toBase58();
+        if (seenAtaInstructions.has(ataKey)) {
+          return;
+        }
+        seenAtaInstructions.add(ataKey);
+        instructions.push(ataResult.instruction);
+      };
 
       if (!tokenWalletB) {
         const ataResult = await maybeCreateAtaInstruction(
@@ -214,8 +230,36 @@ export class ScaleAmm {
           tokenProgramB
         );
         tokenWalletB = ataResult.ata;
-        if (ataResult.instruction) {
-          instructions.push(ataResult.instruction);
+        pushAtaInstruction(ataResult);
+      }
+
+      if (autoCreateBeneficiaryAtas) {
+        const configState = (await (this.program.account as any).platformConfig.fetch(
+          config
+        )) as any;
+        const feeBeneficiary = configState.feeBeneficiary as PublicKey;
+        pushAtaInstruction(
+          await maybeCreateAtaInstruction(
+            this.provider.connection,
+            payer,
+            feeBeneficiary,
+            mintA,
+            tokenProgramA,
+            true
+          )
+        );
+
+        for (const beneficiary of params.feeBeneficiaries ?? []) {
+          pushAtaInstruction(
+            await maybeCreateAtaInstruction(
+              this.provider.connection,
+              payer,
+              beneficiary.wallet,
+              mintA,
+              tokenProgramA,
+              true
+            )
+          );
         }
       }
 
@@ -267,6 +311,7 @@ export class ScaleAmm {
       const swapParams = { amount: toBN(buyParams.amount), limit: toBN(buyParams.limit) };
       const user = this.provider.wallet.publicKey;
       const autoCreateAta = options.autoCreateAta ?? true;
+      const autoCreateBeneficiaryAtas = options.autoCreateBeneficiaryAtas ?? true;
       const wrapSol = options.wrapSol ?? true;
       const unwrapSol = options.unwrapSol ?? false;
 
@@ -341,22 +386,26 @@ export class ScaleAmm {
 
       let platformFeeTaA = options.platformFeeTokenAccount;
       if (!platformFeeTaA) {
-        const ataResult = await maybeCreateAtaInstruction(
-          this.provider.connection,
-          user,
-          feeBeneficiary,
-          mintA,
-          tokenProgramA,
-          true
-        );
-        platformFeeTaA = ataResult.ata;
-        if (ataResult.instruction && !autoCreateAta) {
-          throw new Error(
-            `Missing platform fee ATA for mintA: ${mintA.toBase58()}`
+        if (autoCreateBeneficiaryAtas) {
+          platformFeeTaA = getAta(mintA, feeBeneficiary, tokenProgramA, true);
+        } else {
+          const ataResult = await maybeCreateAtaInstruction(
+            this.provider.connection,
+            user,
+            feeBeneficiary,
+            mintA,
+            tokenProgramA,
+            true
           );
-        }
-        if (ataResult.instruction) {
-          preInstructions.push(ataResult.instruction);
+          platformFeeTaA = ataResult.ata;
+          if (ataResult.instruction && !autoCreateAta) {
+            throw new Error(
+              `Missing platform fee ATA for mintA: ${mintA.toBase58()}`
+            );
+          }
+          if (ataResult.instruction) {
+            preInstructions.push(ataResult.instruction);
+          }
         }
       }
 
@@ -369,27 +418,31 @@ export class ScaleAmm {
       }
       const remainingAccounts =
         options.beneficiaryTokenAccounts ??
-        (await Promise.all(
-          beneficiaries.map(async (beneficiary) => {
-          const ataResult = await maybeCreateAtaInstruction(
-            this.provider.connection,
-            user,
-            beneficiary.wallet,
-            mintA,
-            tokenProgramA,
-            true
-          );
-            if (ataResult.instruction && !autoCreateAta) {
-              throw new Error(
-                `Missing beneficiary ATA for mintA: ${mintA.toBase58()}`
-              );
-            }
-            if (ataResult.instruction) {
-              preInstructions.push(ataResult.instruction);
-            }
-            return ataResult.ata;
-          })
-        ));
+        (autoCreateBeneficiaryAtas
+          ? beneficiaries.map((beneficiary) =>
+              getAta(mintA, beneficiary.wallet, tokenProgramA, true)
+            )
+          : await Promise.all(
+              beneficiaries.map(async (beneficiary) => {
+                const ataResult = await maybeCreateAtaInstruction(
+                  this.provider.connection,
+                  user,
+                  beneficiary.wallet,
+                  mintA,
+                  tokenProgramA,
+                  true
+                );
+                if (ataResult.instruction && !autoCreateAta) {
+                  throw new Error(
+                    `Missing beneficiary ATA for mintA: ${mintA.toBase58()}`
+                  );
+                }
+                if (ataResult.instruction) {
+                  preInstructions.push(ataResult.instruction);
+                }
+                return ataResult.ata;
+              })
+            ));
 
       const ix = await (this.program.methods as any).buy(swapParams)
         .accounts({
