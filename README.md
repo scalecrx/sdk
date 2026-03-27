@@ -274,3 +274,31 @@ Output format:
 - Exact commands run
 - Any assumptions or follow-up tasks
 ```
+
+## Branding & Integration
+
+Official Scale branding assets are available here:
+
+- [Scale Branding Drive](https://drive.google.com/drive/u/0/folders/1kGlDWO2vCC3l8nnwrkjg7GASMydMO2eY)
+
+Basic partner guidelines:
+
+- Use only the logos, marks, icons, wordmarks, screenshots, and visual assets provided in the official drive above.
+- Do not recreate, redraw, recolor, stretch, crop, animate, or otherwise modify Scale brand assets unless the provided files explicitly include an approved variant.
+- Do not source logos or visuals from third-party websites, search results, old decks, social screenshots, or cached copies.
+- When updating partner surfaces, always pull the latest assets from the official drive link rather than reusing locally stored copies from older integrations.
+- If a required format, size, or asset variant is missing, request it instead of generating your own replacement.
+
+SDK integration references for partners:
+
+- Official docs: [README.md](https://github.com/scalecrx/sdk/blob/main/README.md)
+- Public package: [`@scalecrx/sdk` on npm](https://www.npmjs.com/package/@scalecrx/sdk)
+- Source repository: [scalecrx/sdk on GitHub](https://github.com/scalecrx/sdk)
+
+Integration notes:
+
+- Install from npm with `npm install @scalecrx/sdk`.
+- Treat on-chain numeric inputs as raw base units, not UI-decimal values.
+- If your integration cannot sign transactions directly, use the SDK instruction builders and pass the built instructions into your existing wallet or signing flow.
+- For graduation checks, fetch the VMM pair with `sdk.vmm.getPairByMints(mintA, mintB)` and read `pair.data.graduated`.
+- For production integrations, keep RPC URL and network selection environment-driven so the same codepath can be promoted cleanly across environments.
