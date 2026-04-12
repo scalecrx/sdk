@@ -1,3 +1,20 @@
+<p align="center">
+  <img src="./assets/scale-banner.png" alt="Scale banner" />
+</p>
+
+<table width="100%">
+  <tr>
+    <td align="left" valign="middle">
+      <a href="https://github.com/scalecrx/sdk">
+        <img src="./assets/scale-logo.png" alt="Scale" width="160" />
+      </a>
+    </td>
+    <td align="right" valign="middle">
+      <a href="https://drive.google.com/drive/u/0/folders/1kGlDWO2vCC3l8nnwrkjg7GASMydMO2eY"><strong>Download Brand Kit</strong></a>
+    </td>
+  </tr>
+</table>
+
 # Scale SDK
 
 TypeScript SDK for Scale AMM and Scale VMM.
